@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.dtos.Comment;
 using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,35 @@ namespace api.Repository
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
             return comment;
+        }
+
+        public async Task<Comment> deleteAsync(int id)
+        {
+            var existingComment = await _context.Comments.FindAsync(id);
+            if (existingComment == null)
+            {
+                return null;
+            }
+
+            _context.Comments.Remove(existingComment);
+            await _context.SaveChangesAsync();
+            return existingComment;
+        }
+
+        public async Task<Comment> updateAsync(int id, UpdateCommentRequestDto updateDto)
+        {
+            var existingComment = await _context.Comments.FindAsync(id);
+            if (existingComment == null)
+            {
+                return null;
+            }
+
+            existingComment.Title = updateDto.Title;
+            existingComment.Content = updateDto.Content;
+
+            _context.Comments.Update(existingComment);
+            await _context.SaveChangesAsync();
+            return existingComment;
         }
     }
 }
