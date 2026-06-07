@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using api.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
 // linking up the database context to the models 
 namespace api.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public ApplicationDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
         {
@@ -18,5 +20,18 @@ namespace api.Data
 
         public DbSet<Stock> Stocks{get;set;}
         public DbSet<Comment> Comments{get;set;}
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole {Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole {Name = "User", NormalizedName = "USER"}
+            };
+
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+        }
     }
 }
