@@ -7,6 +7,7 @@ using api.dtos.Stock;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,12 +25,10 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryObject query) // IActionResult allows us to return different types of responses (e.g., Ok, NotFound, etc.)
         {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+          
             var stocks = await _stockRepository.GetAllAsync(query); 
             var stockDtos = stocks.Select(s => s.ToStockDto()); // toList for deferred execution
             return Ok(stockDtos);
