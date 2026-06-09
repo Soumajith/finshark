@@ -14,6 +14,7 @@ namespace api.Interfaces
        
         public Task<List<Stock>> GetAllAsync(QueryObject query);
         public Task<Stock?> GetByIdAsync(int id); // ? because it can null in first and default if the stock is not found
+        public Task<Stock?> GetBySymbolAsync(string symbol);
         public Task<Stock> CreateAsync(Stock stock);
         public Task<Stock?> UpdateAsync(int id, UpdateStockRequestDto updateDto);
         public Task<Stock> DeleteAsync(int id);
